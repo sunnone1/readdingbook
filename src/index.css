@@ -17,6 +17,7 @@
 
 @media (max-width: 767px) {
   :root {
+    --H: min(68vw, 40vh);
     --H: min(68vw, 40svh);
     --cy: 43%;
   }

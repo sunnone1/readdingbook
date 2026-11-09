@@ -117,11 +117,17 @@ export const Shelf: React.FC<ShelfProps> = ({
 
   // Measure H and viewport dimensions
   const updateMetrics = useCallback(() => {
-    if (!probeRef.current) return;
-    const probeH = probeRef.current.offsetHeight || 300;
     const isMobile = window.innerWidth <= 767;
+    const computedFallbackH = isMobile
+      ? Math.min(window.innerWidth * 0.68, window.innerHeight * 0.40)
+      : Math.min(window.innerHeight * 0.47, window.innerWidth * 0.33);
 
-    const H = probeH;
+    const probeH =
+      probeRef.current && probeRef.current.offsetHeight > 50
+        ? probeRef.current.offsetHeight
+        : computedFallbackH;
+
+    const H = Math.round(probeH);
     const ws = (H * 142) / 840;
     const d = (H * 474) / 900;
     const gap = H * 0.035;
@@ -469,7 +475,7 @@ export const Shelf: React.FC<ShelfProps> = ({
       {/* Shelf section: perspective:1400px, spans full width, z 10 */}
       <div
         ref={containerRef}
-        className="fixed left-0 right-0 z-10 shelf-viewport touch-pan-y select-none"
+        className="fixed left-0 right-0 z-10 shelf-viewport touch-none select-none"
         style={{
           top: 'calc(var(--cy) - var(--H) / 2 - 50px)',
           height: 'calc(var(--H) + 100px)',

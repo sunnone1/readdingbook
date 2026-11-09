@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FilmItem, getSvgPosterCoords } from '../archive/films';
+import { FilmItem, getCropBackgroundStyle } from '../archive/films';
 
 interface DetailSheetProps {
   film: FilmItem | null;
@@ -9,16 +9,6 @@ interface DetailSheetProps {
   onReadBooklet?: (film: FilmItem) => void;
 }
 
-const INK_CIRCLES = [
-  { cx: 150, cy: 330, delay: 0 },
-  { cx: 340, cy: 600, delay: 120 },
-  { cx: 250, cy: 120, delay: 220 },
-  { cx: 90, cy: 760, delay: 300 },
-  { cx: 400, cy: 250, delay: 360 },
-  { cx: 260, cy: 860, delay: 420 },
-  { cx: 230, cy: 470, delay: 180 },
-];
-
 export const DetailSheet: React.FC<DetailSheetProps> = ({
   film,
   isOpen,
@@ -27,7 +17,6 @@ export const DetailSheet: React.FC<DetailSheetProps> = ({
   onReadBooklet,
 }) => {
   const sheetRef = useRef<HTMLDivElement>(null);
-  const circleRefs = useRef<(SVGCircleElement | null)[]>([]);
   const textLineRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeAnimations, setActiveAnimations] = useState<Animation[]>([]);
   const [rendered, setRendered] = useState(false);
@@ -59,9 +48,6 @@ export const DetailSheet: React.FC<DetailSheetProps> = ({
 
       if (prefersReducedMotion) {
         sheetEl.style.clipPath = 'inset(0px round 0px)';
-        circleRefs.current.forEach((c) => {
-          if (c) c.setAttribute('r', '720');
-        });
         textLineRefs.current.forEach((t) => {
           if (t) t.style.transform = 'translateY(0%)';
         });
@@ -101,26 +87,6 @@ export const DetailSheet: React.FC<DetailSheetProps> = ({
           }
         );
         animList.push(lineAnim);
-      });
-
-      // 3. Ink mask circles expand from r=0 to r=720 over 1250ms from 520ms + circle delay
-      circleRefs.current.forEach((circleEl, idx) => {
-        if (!circleEl) return;
-        circleEl.setAttribute('r', '0');
-        const circleData = INK_CIRCLES[idx];
-        const circleAnim = circleEl.animate(
-          [
-            { r: '0' },
-            { r: '720' },
-          ],
-          {
-            duration: 1250,
-            delay: 520 + circleData.delay,
-            easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
-            fill: 'forwards',
-          }
-        );
-        animList.push(circleAnim);
       });
 
       setActiveAnimations(animList);
@@ -165,8 +131,6 @@ export const DetailSheet: React.FC<DetailSheetProps> = ({
   }, [isOpen, coverRect, film, rendered]);
 
   if (!film && !rendered) return null;
-
-  const posterCoords = film ? getSvgPosterCoords(film.cover) : null;
 
   return (
     <div
@@ -282,72 +246,20 @@ export const DetailSheet: React.FC<DetailSheetProps> = ({
           </div>
         </div>
 
-        {/* Right Column: Poster SVG with Ink Bleed Reveal */}
+        {/* Right Column (Top on Mobile, Right on Desktop): Poster Artwork */}
         <div className="flex items-center justify-center w-full order-1 md:order-2">
-          {posterCoords && (
-            <svg
-              viewBox="0 0 474 900"
-              className="w-auto h-[46svh] md:h-[min(100%,78vh)] max-w-full drop-shadow-2xl rounded-sm"
-              style={{ maxHeight: '78vh' }}
-              aria-label={`Poster for ${film?.title}`}
+          {film && (
+            <div
+              className="relative w-[min(70vw,290px)] sm:w-[310px] md:w-[clamp(280px,26vw,440px)] aspect-[474/900] max-h-[46svh] md:max-h-[78vh] rounded-[3px] shadow-2xl border border-[var(--rule)]/25 overflow-hidden bg-[#ECE8E0] transition-transform duration-500 ease-out hover:scale-[1.02]"
+              style={{
+                ...getCropBackgroundStyle(film.cover),
+              }}
+              role="img"
+              aria-label={`Bìa tác phẩm ${film.titleVi || film.title}`}
             >
-              <defs>
-                {/* Ragged ink blot filter: turbulence + displacement */}
-                <filter id="ink-blot-filter" x="-20%" y="-20%" width="140%" height="140%">
-                  <feTurbulence
-                    type="fractalNoise"
-                    baseFrequency="0.011"
-                    numOctaves="3"
-                    seed="7"
-                    result="noise"
-                  />
-                  <feDisplacementMap
-                    in="SourceGraphic"
-                    in2="noise"
-                    scale="120"
-                    xChannelSelector="R"
-                    yChannelSelector="G"
-                  />
-                </filter>
-
-                {/* Mask combining the 7 expanding ink circles with filter */}
-                <mask id="ink-poster-mask">
-                  <rect width="474" height="900" fill="black" />
-                  <g filter="url(#ink-blot-filter)">
-                    {INK_CIRCLES.map((circ, idx) => (
-                      <circle
-                        key={idx}
-                        ref={(el) => { circleRefs.current[idx] = el; }}
-                        cx={circ.cx}
-                        cy={circ.cy}
-                        r="0"
-                        fill="white"
-                      />
-                    ))}
-                  </g>
-                </mask>
-
-                <clipPath id="poster-clip">
-                  <rect width="474" height="900" rx="3" />
-                </clipPath>
-              </defs>
-
-              <g clipPath="url(#poster-clip)">
-                {/* Soft backdrop paper rect */}
-                <rect width="474" height="900" fill="#ECE8E0" />
-
-                {/* Ink bleed revealed cover artwork */}
-                <image
-                  href={posterCoords.url}
-                  x={posterCoords.x}
-                  y={posterCoords.y}
-                  width={posterCoords.width}
-                  height={posterCoords.height}
-                  preserveAspectRatio="none"
-                  mask="url(#ink-poster-mask)"
-                />
-              </g>
-            </svg>
+              {/* Authentic subtle paper grain and edge shadow overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/10 pointer-events-none" />
+            </div>
           )}
         </div>
       </div>

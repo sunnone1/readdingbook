@@ -53,7 +53,7 @@ async function generateWithModelFallback(
   for (const m of modelsToTry) {
     try {
       const timeoutMs = m === 'gemini-3.1-flash-lite' ? 15000 : 4500;
-      const generatePromise = ai.models.generateContent({
+      const generatePromise = ai!.models.generateContent({
         model: m,
         contents,
         config: {
