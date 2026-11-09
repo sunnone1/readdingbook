@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leon Vasari: Kho Lưu Trữ Phim Băng VHS Cong 3D</title>
+    <meta name="description" content="Kho lưu trữ phim VHS 3D tương tác của đạo diễn Leon Vasari với kệ băng cong phối cảnh chiều sâu, chữ kanji halftone, trang chi tiết mực loang và thanh niên biểu." />
+    <meta property="og:title" content="Leon Vasari: Kho Lưu Trữ Phim Băng VHS Cong 3D" />
+    <meta property="og:description" content="Kho lưu trữ phim VHS 3D tương tác của đạo diễn Leon Vasari với kệ băng cong phối cảnh chiều sâu, chữ kanji halftone, trang chi tiết mực loang và thanh niên biểu." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300..900;1,300..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Noto+Sans+JP:wght@400;500;800&display=swap" rel="stylesheet" />
+    <script>
+      (function() {
+        try {
+          var _currentFetch = window.fetch ? window.fetch.bind(window) : undefined;
+          Object.defineProperty(window, 'fetch', {
+            get: function() {
+              return _currentFetch;
+            },
+            set: function(fn) {
+              _currentFetch = fn;
+            },
+            configurable: true,
+            enumerable: true,
+          });
+        } catch (err) {
+          /* ignore */
+        }
+
+        window.addEventListener(
+          'error',
+          function(e) {
+            if (
+              (e.filename && (e.filename.includes('chrome-extension:') || e.filename.includes('moz-extension:'))) ||
+              (e.message && (e.message.includes('chrome-extension:') || e.message.includes('Cannot set property fetch of #<Window>')))
+            ) {
+              e.stopImmediatePropagation();
+              e.preventDefault();
+              return true;
+            }
+          },
+          true
+        );
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

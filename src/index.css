@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #ECE8E0;
+  --sheet: #F3F0EA;
+  --ink: #141414;
+  --muted: #6D6A63;
+  --cobalt: #1F3FB0;
+  --rule: rgba(20, 20, 20, 0.9);
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --H: min(47vh, 33vw);
+  --cy: 41%;
+  font-family: "Inter Tight", "Noto Sans JP", system-ui, sans-serif;
+  color: var(--ink);
+  background-color: var(--paper);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --H: min(68vw, 40svh);
+    --cy: 43%;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--paper);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  a, button, input, [role="button"] {
+    cursor: none;
+  }
+}
+
+.font-serif {
+  font-family: "Newsreader", Georgia, serif;
+}
+
+.font-sans {
+  font-family: "Inter Tight", "Noto Sans JP", system-ui, sans-serif;
+}
+
+.font-jp-big {
+  font-family: "Noto Sans JP", "Inter Tight", sans-serif;
+  font-weight: 800;
+}
+
+.lbl {
+  font-family: "Inter Tight", "Noto Sans JP", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 10.5px;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.box-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 21px;
+  padding: 0 8px;
+  border: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+/* Halftone dot pattern for background kanji */
+.halftone-kanji {
+  writing-mode: vertical-rl;
+  -webkit-writing-mode: vertical-rl;
+  font-size: min(19vh, 12.5vw);
+  line-height: 1.02;
+  letter-spacing: 0.02em;
+  color: transparent;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(64, 82, 138, 0.55) 0 36%, transparent 40%),
+    linear-gradient(rgba(110, 122, 160, 0.26), rgba(110, 122, 160, 0.26));
+  background-size: 3px 3px, 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  user-select: none;
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .halftone-kanji {
+    font-size: 22vw;
+    opacity: 0.8;
+  }
+}
+
+/* Stage 3D perspective */
+.shelf-viewport {
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}

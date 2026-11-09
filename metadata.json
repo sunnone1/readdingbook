@@ -1,0 +1,6 @@
+{
+  "name": "Leon Vasari: Curved VHS Archive",
+  "description": "Curved 3D VHS film archive hero with dynamic perspective shelf, halftone kanji, ink bleed detail sheet, and timeline navigation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
